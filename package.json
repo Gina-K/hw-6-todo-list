@@ -1,0 +1,15 @@
+{
+  "name": "hw6",
+  "version": "1.0.0",
+  "description": "ToDo list",
+  "main": "index.html",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "lite-server"
+  },
+  "author": "Eugenia",
+  "license": "ISC",
+  "devDependencies": {
+    "lite-server": "^2.5.4"
+  }
+}
