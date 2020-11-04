@@ -2,9 +2,30 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=0">
   <title>ToDo list</title>
-</head>
-<body>
 
+  <link rel="stylesheet" href="./styles/todo_styles.css">
+</head>
+
+<body>
+<div class="container">
+  <h1>ToDo List</h1>
+
+  <form class="todo-form">
+    <input type="text" class="todo-input" placeholder="Add what you want to do">
+    <button type="submit" class="todo-form__button">ADD</button>
+  </form>
+
+  <ul class="todo-items">
+    <li class="todo-items__item">
+      <input class="todo-items__checkbox" type="checkbox">
+      Squish that cat
+      <button class="todo-items__delete-button">X</button>
+    </li>
+  </ul>
+</div>
+
+<script src="./scripts/todo_logic.js"></script>
 </body>
 </html>
