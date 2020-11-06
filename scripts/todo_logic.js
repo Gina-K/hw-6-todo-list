@@ -9,5 +9,18 @@ todoForm.addEventListener("submit", function(event) {
 });
 
 function addTodo(item) {
-    //some code here
+    if(item) {
+        const todo = {
+            id: Date.now(),
+            name: item,
+            completed: false
+        };
+        todos.push(todo);
+        renderTodos(todos);
+        todoInput.value = '';
+    }
+}
+
+function renderTodos(todos) {
+//    some code here
 }
