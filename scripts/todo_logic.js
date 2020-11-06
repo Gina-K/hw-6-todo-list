@@ -3,11 +3,6 @@ const todoInput = document.querySelector(".todo-form__todo-input");
 const todoItemsList = document.querySelector(".todo-items");
 let todos = [];
 
-todoForm.addEventListener("submit", function (event) {
-    event.preventDefault();
-    addTodo(todoInput.value);
-});
-
 function addTodo(item) {
     if (item) {
         const todo = {
@@ -34,12 +29,39 @@ function renderTodos(todos) {
             liElement.classList.add("item_checked");
         }
 
-        liElement.innerHTML = `
-        <input type="checkbox" class="todo-items__checkbox" ${isChecked}>
-        ${item.name}
-        <button class="todo-items__delete-button">X</button>
-        `;
+        liElement.innerHTML = `<input type="checkbox" class="todo-items__checkbox" ${isChecked}>
+                                ${item.name}
+                                <button class="todo-items__delete-button">X</button>`;
 
         todoItemsList.append(liElement);
     })
 }
+
+function changeState(id) {
+    todos.forEach(function(item) {
+        if (item.id == id) {
+            item.isCompleted = !item.isCompleted;
+        }
+    });
+    renderTodos(todos);
+}
+
+function deleteTodo(id) {
+    todos = todos.filter(item => item.id != id);
+    renderTodos(todos);
+}
+
+todoForm.addEventListener("submit", function (event) {
+    event.preventDefault();
+    addTodo(todoInput.value);
+});
+
+todoItemsList.addEventListener("click", function (event) {
+    if (event.target.type === "checkbox") {
+        changeState(event.target.parentElement.getAttribute("data-id"));
+    }
+
+    if (event.target.classList.contains("todo-items__delete-button")) {
+        deleteTodo(event.target.parentElement.getAttribute("data-id"));
+    }
+});
