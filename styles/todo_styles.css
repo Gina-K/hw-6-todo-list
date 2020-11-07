@@ -74,15 +74,28 @@ h1 {
 
 .todo-form {
   margin: 20px 0 0;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+  width: 100%;
 }
 
-.todo-form__todo-input {
-  width: 400px;
+.todo-form__text,
+.todo-form__deadline {
   height: 40px;
   margin-right: 10px;
   font-size: 16px;
   border-color: #cecece;
   border-radius: 5px;
+}
+
+.todo-form__text {
+  -webkit-box-flex: 1;
+  -ms-flex-positive: 1;
+  flex-grow: 1;
 }
 
 .todo-form__add-button {
@@ -123,6 +136,12 @@ h1 {
   -webkit-box-flex: 1;
   -ms-flex-positive: 1;
   flex-grow: 1;
+}
+
+.todo-items__deadline {
+  margin-left: 16px;
+  font-weight: 300;
+  color: #127681;
 }
 
 .todo-items__delete-button {

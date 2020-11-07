@@ -1,18 +1,21 @@
 const todoForm = document.querySelector(".todo-form");
-const todoInput = document.querySelector(".todo-form__todo-input");
+const todoText = document.querySelector(".todo-form__text");
+const todoDeadline = document.querySelector(".todo-form__deadline");
 const todoItemsList = document.querySelector(".todo-items");
 let todos = [];
 
-function addTodo(item) {
-    if (item) {
+function addTodo(text, deadline) {
+    if (text) {
         const todo = {
             id: Date.now(),
-            name: item,
-            isCompleted: false
+            name: text,
+            isCompleted: false,
+            deadline: deadline
         };
         todos.push(todo);
         renderTodos(todos);
-        todoInput.value = '';
+        todoText.value = '';
+        todoDeadline.value = "";
     }
 }
 
@@ -31,6 +34,7 @@ function renderTodos(todos) {
 
         liElement.innerHTML = `<input type="checkbox" class="todo-items__checkbox" ${isChecked}>
                                 <span class="todo-items__text">${item.name}</span>
+                                <span class="todo-items__deadline">${item.deadline}</span>
                                 <button class="todo-items__delete-button">X</button>`;
 
         todoItemsList.append(liElement);
@@ -53,7 +57,7 @@ function deleteTodo(id) {
 
 todoForm.addEventListener("submit", function (event) {
     event.preventDefault();
-    addTodo(todoInput.value);
+    addTodo(todoText.value, todoDeadline.value);
 });
 
 todoItemsList.addEventListener("click", function (event) {
