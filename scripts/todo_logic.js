@@ -30,7 +30,7 @@ function renderTodos(todos) {
         }
 
         liElement.innerHTML = `<input type="checkbox" class="todo-items__checkbox" ${isChecked}>
-                                ${item.name}
+                                <span class="todo-items__text">${item.name}</span>
                                 <button class="todo-items__delete-button">X</button>`;
 
         todoItemsList.append(liElement);
