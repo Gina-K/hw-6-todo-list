@@ -10,7 +10,7 @@
 </head>
 
 <body>
-<div class="container">
+<main class="container">
   <h1>ToDo List</h1>
 
   <form class="todo-form">
@@ -18,6 +18,20 @@
     <input type="date" class="todo-form__deadline">
     <button type="submit" class="todo-form__add-button">ADD</button>
   </form>
+
+  <div class="controls">
+    <select>
+      <option value="all">Show all</option>
+      <option value="done">Completed</option>
+      <option value="undone">Incomplete</option>
+    </select>
+    <div>
+      <span>Deadline from</span>
+      <input type="date">
+      <span>to</span>
+      <input type="date">
+    </div>
+  </div>
 
   <ul class="todo-items">
 <!--    <li class="todo-items__item" data-id="1604687163294">-->
@@ -32,7 +46,7 @@
 <!--      <button class="todo-items__delete-button">X</button>-->
 <!--    </li>-->
   </ul>
-</div>
+</main>
 
 <script src="./scripts/todo_logic.js"></script>
 </body>
