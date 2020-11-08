@@ -42,7 +42,7 @@ function renderTodos(todos) {
 }
 
 function changeState(id) {
-    todos.forEach(function(item) {
+    todos.forEach(function (item) {
         if (item.id == id) {
             item.isCompleted = !item.isCompleted;
         }
@@ -53,6 +53,17 @@ function changeState(id) {
 function deleteTodo(id) {
     todos = todos.filter(item => item.id != id);
     renderTodos(todos);
+}
+
+function sortByComplete(target) {
+    switch (target.value) {
+        case "completed":
+            return todos.filter(todo => todo.isCompleted);
+        case "incomplete":
+            return todos.filter(todo => !todo.isCompleted);
+        case "all":
+            return todos;
+    }
 }
 
 todoForm.addEventListener("submit", function (event) {
@@ -68,4 +79,10 @@ todoItemsList.addEventListener("click", function (event) {
     if (event.target.classList.contains("todo-items__delete-button")) {
         deleteTodo(event.target.parentElement.getAttribute("data-id"));
     }
+});
+
+document.querySelector(".controls").addEventListener("change", function (event) {
+    let sortedTodos;
+    sortedTodos = sortByComplete(event.target);
+    renderTodos(sortedTodos);
 });
