@@ -3,6 +3,10 @@ const todoText = document.querySelector(".todo-form__text");
 const todoDeadline = document.querySelector(".todo-form__deadline");
 const todoItemsList = document.querySelector(".todo-items");
 let todos = [];
+const view = {
+    needSortByComplete: null,
+    needSortByDeadline: null
+}
 
 function addTodo(text, deadline) {
     if (text) {
@@ -20,6 +24,10 @@ function addTodo(text, deadline) {
 }
 
 function renderTodos(todos) {
+    if (view.needSortByComplete) {
+        todos = sortByComplete(view.needSortByComplete);
+    }
+
     todoItemsList.innerHTML = '';
     todos.forEach(function (item) {
         const isChecked = item.isCompleted ? "checked" : null;
@@ -55,11 +63,13 @@ function deleteTodo(id) {
     renderTodos(todos);
 }
 
-function sortByComplete(target) {
-    switch (target.value) {
+function sortByComplete(state) {
+    switch (state) {
         case "completed":
+            view.needSortByComplete = "completed";
             return todos.filter(todo => todo.isCompleted);
         case "incomplete":
+            view.needSortByComplete = "incomplete";
             return todos.filter(todo => !todo.isCompleted);
         case "all":
             return todos;
@@ -83,6 +93,6 @@ todoItemsList.addEventListener("click", function (event) {
 
 document.querySelector(".controls").addEventListener("change", function (event) {
     let sortedTodos;
-    sortedTodos = sortByComplete(event.target);
+    sortedTodos = sortByComplete(event.target.value);
     renderTodos(sortedTodos);
 });
