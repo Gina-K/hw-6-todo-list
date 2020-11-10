@@ -4,7 +4,7 @@ const todoDeadline = document.querySelector(".todo-form__deadline");
 const todoItemsList = document.querySelector(".todo-items");
 let allTodos = [];
 
-// document.querySelector("#deadline-from").valueAsDate = new Date();
+getFromLocalStorage();
 
 function changeProcessing() {
     let tempTodos = allTodos;
@@ -32,7 +32,7 @@ function addTodo(text, deadline) {
             deadline: deadline
         };
         allTodos.push(todo);
-        changeProcessing();
+        addToLocalStorage(allTodos);
         todoText.value = '';
         todoDeadline.value = "";
     }
@@ -66,12 +66,12 @@ function changeState(id) {
             item.isCompleted = !item.isCompleted;
         }
     });
-    changeProcessing();
+    addToLocalStorage(allTodos);
 }
 
 function deleteTodo(id) {
     allTodos = allTodos.filter(item => item.id != id);
-    changeProcessing();
+    addToLocalStorage(allTodos);
 }
 
 function filterByComplete(state) {
@@ -99,6 +99,21 @@ function filterByDeadline(from, to, todos) {
     return tempTodos;
 }
 
+function addToLocalStorage(todos) {
+    localStorage.setItem("todos", JSON.stringify(todos));
+    changeProcessing();
+}
+
+function getFromLocalStorage() {
+    const ref = localStorage.getItem("todos");
+
+    if (ref) {
+        console.log(ref);
+        allTodos = JSON.parse(ref);
+        changeProcessing();
+    }
+}
+
 todoForm.addEventListener("submit", function (event) {
     event.preventDefault();
     addTodo(todoText.value, todoDeadline.value);
@@ -116,7 +131,7 @@ todoItemsList.addEventListener("click", function (event) {
     }
 });
 
-document.querySelector(".controls").addEventListener("change", event => changeProcessing());
+document.querySelector(".controls").addEventListener("change", () => changeProcessing());
 
 document.querySelector(".deadline-clear").addEventListener("click", function () {
     document.querySelector("#deadline-from").value = null;
