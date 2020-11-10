@@ -2,16 +2,26 @@ const todoForm = document.querySelector(".todo-form");
 const todoText = document.querySelector(".todo-form__text");
 const todoDeadline = document.querySelector(".todo-form__deadline");
 const todoItemsList = document.querySelector(".todo-items");
-let todos = [];
-const view = {
-    needFilterByComplete: null,
-    needFilterByDeadline: {
-        from: null,
-        to: null
-    }
-}
+let allTodos = [];
 
 document.querySelector("#deadline-from").valueAsDate = new Date();
+
+function changeProcessing() {
+    let tempTodos = allTodos;
+    let stateFilter = document.querySelector(".controls__isDone").value;
+    let dateFromFilter = document.querySelector("#deadline-from").value;
+    let dateToFilter = document.querySelector("#deadline-to").value;
+
+    if (stateFilter !== "all") {
+        tempTodos = filterByComplete(stateFilter);
+    }
+
+    if (dateFromFilter && dateToFilter) {
+        tempTodos = filterByDeadline(dateFromFilter, dateToFilter, tempTodos);
+    }
+
+    renderTodos(tempTodos);
+}
 
 function addTodo(text, deadline) {
     if (text) {
@@ -21,26 +31,14 @@ function addTodo(text, deadline) {
             isCompleted: false,
             deadline: deadline
         };
-        todos.push(todo);
-        renderTodos(todos);
+        allTodos.push(todo);
+        changeProcessing();
         todoText.value = '';
         todoDeadline.value = "";
     }
 }
 
 function renderTodos(todos) {
-    if (view.needFilterByComplete) {
-        todos = filterByComplete(view.needFilterByComplete);
-        view.needFilterByDeadline = false;
-        document.querySelector("#deadline-to").value = null;
-    }
-
-    if (view.needFilterByDeadline.to) {
-        todos = filterByDeadline(view.needFilterByDeadline.from, view.needFilterByDeadline.to);
-        view.needFilterByComplete = false;
-        document.querySelector(".controls__isDone").value = "all";
-    }
-
     todoItemsList.innerHTML = '';
     todos.forEach(function (item) {
         const isChecked = item.isCompleted ? "checked" : null;
@@ -63,42 +61,32 @@ function renderTodos(todos) {
 }
 
 function changeState(id) {
-    todos.forEach(function (item) {
+    allTodos.forEach(function (item) {
         if (item.id == id) {
             item.isCompleted = !item.isCompleted;
         }
     });
-    renderTodos(todos);
+    changeProcessing();
 }
 
 function deleteTodo(id) {
-    todos = todos.filter(item => item.id != id);
-    renderTodos(todos);
+    allTodos = allTodos.filter(item => item.id != id);
+    changeProcessing();
 }
 
 function filterByComplete(state) {
     switch (state) {
         case "completed":
-            view.needFilterByComplete = "completed";
-            return todos.filter(todo => todo.isCompleted);
+            return allTodos.filter(todo => todo.isCompleted);
         case "incomplete":
-            view.needFilterByComplete = "incomplete";
-            return todos.filter(todo => !todo.isCompleted);
+            return allTodos.filter(todo => !todo.isCompleted);
         case "all":
-            view.needFilterByComplete = false;
-            return todos;
+            return allTodos;
     }
 }
 
-function filterByDeadline(from, to) {
-    // let from = document.querySelector("#deadline-from").value;
-    // let to = document.querySelector("#deadline-to").value;
-
-    if (from && to) {
-        view.needFilterByDeadline.from = from;
-        view.needFilterByDeadline.to = to;
-        return todos.filter(todo => todo.deadline >= from && todo.deadline <= to);
-    }
+function filterByDeadline(from, to, todos) {
+    return todos.filter(todo => todo.deadline >= from && todo.deadline <= to);
 }
 
 todoForm.addEventListener("submit", function (event) {
@@ -107,25 +95,17 @@ todoForm.addEventListener("submit", function (event) {
 });
 
 todoItemsList.addEventListener("click", function (event) {
+    let todo = event.target.parentElement.getAttribute("data-id");
+
     if (event.target.type === "checkbox") {
-        changeState(event.target.parentElement.getAttribute("data-id"));
+        changeState(todo);
     }
 
     if (event.target.classList.contains("todo-items__delete-button")) {
-        deleteTodo(event.target.parentElement.getAttribute("data-id"));
+        deleteTodo(todo);
     }
 });
 
 document.querySelector(".controls").addEventListener("change", function (event) {
-    let filteredTodos;
-
-    if (event.target.classList.contains("controls__isDone")) {
-        filteredTodos = filterByComplete(event.target.value);
-    }
-
-    if (event.target.classList.contains("deadline-filter")) {
-        filteredTodos = filterByDeadline(document.querySelector("#deadline-from").value, document.querySelector("#deadline-to").value);
-    }
-
-    renderTodos(filteredTodos);
+    changeProcessing();
 });
