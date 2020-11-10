@@ -4,7 +4,7 @@ const todoDeadline = document.querySelector(".todo-form__deadline");
 const todoItemsList = document.querySelector(".todo-items");
 let allTodos = [];
 
-document.querySelector("#deadline-from").valueAsDate = new Date();
+// document.querySelector("#deadline-from").valueAsDate = new Date();
 
 function changeProcessing() {
     let tempTodos = allTodos;
@@ -16,7 +16,7 @@ function changeProcessing() {
         tempTodos = filterByComplete(stateFilter);
     }
 
-    if (dateFromFilter && dateToFilter) {
+    if (dateFromFilter || dateToFilter) {
         tempTodos = filterByDeadline(dateFromFilter, dateToFilter, tempTodos);
     }
 
@@ -86,7 +86,17 @@ function filterByComplete(state) {
 }
 
 function filterByDeadline(from, to, todos) {
-    return todos.filter(todo => todo.deadline >= from && todo.deadline <= to);
+    let tempTodos = todos;
+
+    if (from) {
+        tempTodos = tempTodos.filter(todo => todo.deadline >= from)
+    }
+
+    if (to) {
+        tempTodos = tempTodos.filter(todo => todo.deadline <= to);
+    }
+
+    return tempTodos;
 }
 
 todoForm.addEventListener("submit", function (event) {
