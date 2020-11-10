@@ -116,6 +116,10 @@ todoItemsList.addEventListener("click", function (event) {
     }
 });
 
-document.querySelector(".controls").addEventListener("change", function (event) {
+document.querySelector(".controls").addEventListener("change", event => changeProcessing());
+
+document.querySelector(".deadline-clear").addEventListener("click", function () {
+    document.querySelector("#deadline-from").value = null;
+    document.querySelector("#deadline-to").value = null;
     changeProcessing();
-});
+})
