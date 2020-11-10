@@ -72,6 +72,7 @@ function sortByComplete(state) {
             view.needSortByComplete = "incomplete";
             return todos.filter(todo => !todo.isCompleted);
         case "all":
+            view.needSortByComplete = false;
             return todos;
     }
 }
