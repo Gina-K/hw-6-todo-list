@@ -4,9 +4,14 @@ const todoDeadline = document.querySelector(".todo-form__deadline");
 const todoItemsList = document.querySelector(".todo-items");
 let todos = [];
 const view = {
-    needSortByComplete: null,
-    needSortByDeadline: null
+    needFilterByComplete: null,
+    needFilterByDeadline: {
+        from: null,
+        to: null
+    }
 }
+
+document.querySelector("#deadline-from").valueAsDate = new Date();
 
 function addTodo(text, deadline) {
     if (text) {
@@ -24,8 +29,16 @@ function addTodo(text, deadline) {
 }
 
 function renderTodos(todos) {
-    if (view.needSortByComplete) {
-        todos = sortByComplete(view.needSortByComplete);
+    if (view.needFilterByComplete) {
+        todos = filterByComplete(view.needFilterByComplete);
+        view.needFilterByDeadline = false;
+        document.querySelector("#deadline-to").value = null;
+    }
+
+    if (view.needFilterByDeadline.to) {
+        todos = filterByDeadline(view.needFilterByDeadline.from, view.needFilterByDeadline.to);
+        view.needFilterByComplete = false;
+        document.querySelector(".controls__isDone").value = "all";
     }
 
     todoItemsList.innerHTML = '';
@@ -63,17 +76,28 @@ function deleteTodo(id) {
     renderTodos(todos);
 }
 
-function sortByComplete(state) {
+function filterByComplete(state) {
     switch (state) {
         case "completed":
-            view.needSortByComplete = "completed";
+            view.needFilterByComplete = "completed";
             return todos.filter(todo => todo.isCompleted);
         case "incomplete":
-            view.needSortByComplete = "incomplete";
+            view.needFilterByComplete = "incomplete";
             return todos.filter(todo => !todo.isCompleted);
         case "all":
-            view.needSortByComplete = false;
+            view.needFilterByComplete = false;
             return todos;
+    }
+}
+
+function filterByDeadline(from, to) {
+    // let from = document.querySelector("#deadline-from").value;
+    // let to = document.querySelector("#deadline-to").value;
+
+    if (from && to) {
+        view.needFilterByDeadline.from = from;
+        view.needFilterByDeadline.to = to;
+        return todos.filter(todo => todo.deadline >= from && todo.deadline <= to);
     }
 }
 
@@ -93,7 +117,15 @@ todoItemsList.addEventListener("click", function (event) {
 });
 
 document.querySelector(".controls").addEventListener("change", function (event) {
-    let sortedTodos;
-    sortedTodos = sortByComplete(event.target.value);
-    renderTodos(sortedTodos);
+    let filteredTodos;
+
+    if (event.target.classList.contains("controls__isDone")) {
+        filteredTodos = filterByComplete(event.target.value);
+    }
+
+    if (event.target.classList.contains("deadline-filter")) {
+        filteredTodos = filterByDeadline(document.querySelector("#deadline-from").value, document.querySelector("#deadline-to").value);
+    }
+
+    renderTodos(filteredTodos);
 });
